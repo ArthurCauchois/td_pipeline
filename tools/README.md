@@ -2,8 +2,6 @@
 
 A collection of Python scripts, Houdini HDAs and other tools, free to download and use.
 
-> All the content in this folder is personal work and contains no studio-related code, assets or data.
-
 ## Contents
 
 | DCC | Content |

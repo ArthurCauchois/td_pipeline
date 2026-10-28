@@ -2,7 +2,7 @@
 
 A personal collection of pipeline tools, scripts and notes, focused on **USD / Solaris workflows** and **DCC tool development in Python** for VFX and Animation production.
 
-> Everything in this repo is personal work. It contains no studio code, assets or data.
+> Free to use, free to share  |  Contact me for any information or just to say hi 
 
 ## Tech
 Python · Houdini · USD / Solaris

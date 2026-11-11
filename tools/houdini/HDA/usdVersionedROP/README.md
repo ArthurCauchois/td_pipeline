@@ -68,31 +68,26 @@ With **Pin Dependencies** on, the exported version no longer references the chil
 
 ### Before / after
 
-| Before pinning | After pinning |
-|----------------|---------------|
-| *Layer stack screenshot: the export references `chair_publish.usda`* | *Layer stack screenshot: the export references `chair_v0004.usda`* |
-| TBA | TBA |
+| Before pinning | During pinning | After pinning |
+|----------------|----------------|---------------|
+| *The export references `asset.usda`* | *The export removes the reference to the publish version `asset.usda -> asset_v0003`*   | *The export references `asset_v0003.usda`* |
+| ![Before pinning](screenshots/USD_Versioned_ROP_pin_before.png) | ![During pinning](screenshots/USD_Versioned_ROP_pin_middle.png) | ![After pinning](screenshots/USD_Versioned_ROP_pin_after.png) |
 
-<!--
-Replace the TBA row with:
-| ![Before pinning](screenshots/pin_before.png) | ![After pinning](screenshots/pin_after.png) |
--->
-
-The same change seen in the USD file (asset names are examples):
+The same change seen in the USD file :
 
 ```usda
 # Before
-references = @../chair/chair_publish.usda@
+references = @../asset/asset_publish.usda@
 
 # After
-references = @../chair/v0004/chair_v0004.usda@
+references = @../asset/v0004/asset_v0004.usd@
 ```
 
 ### What gets pinned
 - Only references to files ending in `_publish.usda` are pinned.
+- Only references inside the **exported file** and not lower publish.
 - Other references (textures, caches, files outside the publish convention) are left untouched.
 - Paths stay relative, like in the original reference.
-- If a child has no publish file yet, the export stops with a message asking you to publish it first.
 
 ## JSON metadata
 
@@ -106,8 +101,8 @@ Each export writes a `.json` file next to the USD file:
     "file": "asset_v0001.usd",
     "version": "v0001",
     "published": true,
-    "pin_dependencies": true,
-    "pinned_dependencies": [
+    "pinDependencies": true,
+    "pinnedDependencies": [
         {
             "from": "../chair/chair_publish.usda",
             "to": "../chair/v0004/chair_v0004.usda"
@@ -116,7 +111,7 @@ Each export writes a `.json` file next to the USD file:
 }
 ```
 
-`pinned_dependencies` only appears when something was actually pinned. The file can be used to trace a version back to its source scene, build a publish history, or display information in a tool.
+`pinnedDependencies` only appears when something was actually pinned. The file can be used to trace a version back to its source scene, build a publish history, or display information in a tool.
 
 ## Project structure
 

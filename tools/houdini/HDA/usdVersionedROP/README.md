@@ -4,7 +4,7 @@ A Houdini HDA that exports a LOP stage to a **versioned USD file**, optionally u
 
 It can also **pin dependencies**: references to other assets/layer **publish** files are replaced with the exact versions they currently point to, so an old export keeps loading the same data even after those assets are republished.
 
-![Overview](screenshots/overview.png) TBA
+![Icon](screenshots/USD_Versioned_ROP_Icon.png)
 
 ## Features
 - Automatic version numbering (`v0001`, `v0002`, ...) or a manually chosen version.
@@ -24,7 +24,7 @@ It can also **pin dependencies**: references to other assets/layer **publish** f
 3. Choose your options (see the table below).
 4. Click **Save To Disk**.
 
-![Node interface](screenshots/ui.png) TBA
+![Node interface](screenshots/USD_Versioned_ROP_UI.png)
 
 ## Parameters
 

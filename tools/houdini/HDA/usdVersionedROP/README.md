@@ -1,20 +1,20 @@
 # USD Versioned Export
 
-A Houdini HDA that exports a LOP stage to a **versioned USD file**, optionally updates a **publish file** that points to the chosen version, and writes a **JSON file** recording who exported what, when, and from which scene.
+A Houdini HDA that exports a LOP stage to a **versioned USD file**, optionally updates a **publish file** that points to the exported version, and writes a **JSON file** recording who exported what, when, and from which scene.
 
-It can also **pin dependencies**: references to other assets/layer **publish** files are replaced with the exact versions they currently point to, so an old export keeps loading the same data even after those assets are republished.
+It can also **pin dependencies**: references to other assets/layer **publish** files are replaced with the exact versions they currently point to, so an export keeps loading the same data even after those assets are republished.
 
 ![Icon](screenshots/USD_Versioned_ROP_Icon.png)
 
 ## Features
 - Automatic version numbering (`v0001`, `v0002`, ...) or a manually chosen version.
-- A publish file (`<name>_publish.usda`) that sublayers the latest version and keeps the stage metadata (up axis, units, time codes, default prim).
+- A publish file (`<name>_publish.usda`) that sublayers the exported version and keeps the stage metadata (up axis, units, time codes, default prim).
 - Dependency pinning: publish references are swapped for the versioned files behind them.
 - A JSON file next to each versioned export with the user, date, source scene, version, options used and pinned dependencies.
 - Works in the UI and without one (batch or farm).
 
 ## Installation
-1. Download `usd_versioned_export.hda` from the [`hda/`](hda/) folder.
+1. Download `usd_versioned_export.hda`.
 2. Copy it to your Houdini `otls` folder.
 3. In a LOP network, press `Tab` and search for **USD Versioned Export**.
 
@@ -24,7 +24,7 @@ It can also **pin dependencies**: references to other assets/layer **publish** f
 3. Choose your options (see the table below).
 4. Click **Save To Disk**.
 
-![Node interface](screenshots/USD_Versioned_ROP_UI.png)
+![UI](screenshots/USD_Versioned_ROP_UI.png)
 
 ## Parameters
 
@@ -35,7 +35,7 @@ It can also **pin dependencies**: references to other assets/layer **publish** f
 | **Version** | Version number to export. Only used when **Latest** is off. If that version already exists, its files are overwritten. |
 | **Latest** | Exports to the next free version number (highest existing version + 1) and fills in the Version field. |
 | **Update Publish** | After exporting, updates `<name>_publish.usda` so it points to this new version. Any scene or asset referencing the publish picks up this version. Turn off to export a version without changing what those references see. |
-| **Pin Dependencies** | Replaces references to other assets' publish files with the exact versions they currently point to. See [Pin Dependencies](#pin-dependencies). |
+| **Pin Dependencies** | Replaces references to other assets publish files with the exact versions they currently point to. See [Pin Dependencies](#pin-dependencies). |
 | **Valid Frame Range** | Which frames are exported: the current frame, a range, or the playbar range. |
 | **Start/End/Inc** | First frame, last frame and step of the exported range. Only used with a custom frame range. |
 | **Save To Disk** | Runs the export with the options above. |
@@ -44,7 +44,7 @@ It can also **pin dependencies**: references to other assets/layer **publish** f
 
 ```
 usd/
-├── asset_publish.usda        # points to the latest published version
+├── asset_publish.usda        # points to the latest exported version
 ├── v0001/
 │   ├── asset_v0001.usd
 │   └── asset_v0001.json
@@ -56,7 +56,21 @@ usd/
 
 The publish file only contains one sublayer pointing to a version, plus the stage metadata. Updating the publish means changing that single pointer.
 
-![Publish and versions](screenshots/publish_structure.png) TBA
+```
+#usda 1.0
+(
+    defaultPrim = "assetName"
+    startTimeCode = 1001
+    endTimeCode = 1001
+    framesPerSecond = 24
+    timeCodesPerSecond = 24
+    upAxis = "Y"
+    metersPerUnit = 1
+    subLayers = [
+        @v0013/layout_v0013.usd@
+    ]
+)
+```
 
 ## Pin Dependencies
 
@@ -70,7 +84,7 @@ With **Pin Dependencies** on, the exported version no longer references the chil
 
 | Before pinning | During pinning | After pinning |
 |----------------|----------------|---------------|
-| *The export references `asset.usda`* | *The export removes the reference to the publish version `asset.usda -> asset_v0003`*   | *The export references `asset_v0003.usda`* |
+| *The export references `asset_publish.usda`* | *The export removes the reference to the publish version `asset_publish.usda -> asset_v0003.usd`*   | *The export references `asset_v0003.usd`* |
 | ![Before pinning](screenshots/USD_Versioned_ROP_pin_before.png) | ![During pinning](screenshots/USD_Versioned_ROP_pin_middle.png) | ![After pinning](screenshots/USD_Versioned_ROP_pin_after.png) |
 
 The same change seen in the USD file :
@@ -98,14 +112,14 @@ Each export writes a `.json` file next to the USD file:
     "user": "username",
     "date": "2026-11-10T14:32:05",
     "hip_file": "D:/project/scene.hip",
-    "file": "asset_v0001.usd",
-    "version": "v0001",
+    "file": "asset_v0003.usd",
+    "version": "v0003",
     "published": true,
     "pinDependencies": true,
     "pinnedDependencies": [
         {
-            "from": "../chair/chair_publish.usda",
-            "to": "../chair/v0004/chair_v0004.usda"
+            "from": "../asset/asset_publish.usda",
+            "to": "../asset/v0003/asset_v0003.usda"
         }
     ]
 }

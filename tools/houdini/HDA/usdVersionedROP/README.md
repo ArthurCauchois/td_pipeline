@@ -74,7 +74,6 @@ The publish file only contains one sublayer pointing to a version, plus the stag
 
 ## Pin Dependencies
 
-### The problem
 When an asset references another asset through its **publish** file, the reference always follows whatever that publish currently points to. If the child asset is republished, every older export silently changes too, and it becomes impossible to reproduce an earlier state.
 
 ### The solution
@@ -94,7 +93,7 @@ The same change seen in the USD file :
 references = @../asset/asset_publish.usda@
 
 # After
-references = @../asset/v0004/asset_v0004.usd@
+references = @../asset/v0004/asset_v0002.usd@
 ```
 
 ### What gets pinned
@@ -111,9 +110,9 @@ Each export writes a `.json` file next to the USD file:
 {
     "user": "username",
     "date": "2026-11-10T14:32:05",
-    "hip_file": "D:/project/scene.hip",
-    "file": "asset_v0003.usd",
-    "version": "v0003",
+    "hip_file": "D:/project/scene_layout.hip",
+    "file": "layout_v0002.usd",
+    "version": "v0002",
     "published": true,
     "pinDependencies": true,
     "pinnedDependencies": [
@@ -127,16 +126,6 @@ Each export writes a `.json` file next to the USD file:
 
 `pinnedDependencies` only appears when something was actually pinned. The file can be used to trace a version back to its source scene, build a publish history, or display information in a tool.
 
-## Project structure
-
-```
-usd_versioned_export/
-├── README.md
-├── usd_versioned_export.hda
-├── python/
-│   └── export_usd_versioned.py   # readable copy of the HDA's Python code
-└── screenshots/
-```
 
 ## Notes
 - The publish convention is hard-coded: publish files must end in `_publish.usda`.

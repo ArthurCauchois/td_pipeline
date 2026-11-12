@@ -67,7 +67,7 @@ The publish file only contains one sublayer pointing to a version, plus the stag
     upAxis = "Y"
     metersPerUnit = 1
     subLayers = [
-        @v0013/layout_v0013.usd@
+        @v0002/asset_v0002.usd@
     ]
 )
 ```
